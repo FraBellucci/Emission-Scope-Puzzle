@@ -1,0 +1,92 @@
+import { useState } from "react";
+
+export default function EmissionScopePuzzle() {
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState({});
+
+  const scopes = [
+    { id: 1, title: "Scope 1", description: "Emissioni dirette: attività controllate dall'azienda (veicoli, caldaie, generatori)." },
+    { id: 2, title: "Scope 2", description: "Emissioni indirette da energia acquistata (elettricità, riscaldamento, raffreddamento)." },
+    { id: 3, title: "Scope 3", description: "Emissioni lungo la catena del valore (fornitori, viaggi, prodotti, smaltimento)." },
+  ];
+
+  const items = [
+    { id: "a", text: "Flotta di veicoli aziendali" , correct: 1},
+    { id: "b", text: "Energia elettrica consumata nelle centrali" , correct: 2},
+    { id: "c", text: "Trasporto materiali da parte dei fornitori" , correct: 3},
+    { id: "d", text: "Generatori di emergenza a gasolio" , correct: 1},
+    { id: "e", text: "Viaggi di lavoro dei dipendenti" , correct: 3},
+    { id: "f", text: "Riscaldamento degli edifici aziendali" , correct: 2},
+  ];
+
+  const handleDrop = (scopeId, itemId) => {
+    if (answers[itemId]) return; // already answered
+    const item = items.find((i) => i.id === itemId);
+    const correct = item.correct === scopeId;
+    setAnswers({ ...answers, [itemId]: { scopeId, correct } });
+    setScore((prev) => prev + (correct ? 10 : -5));
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-green-50 to-slate-100 p-4">
+      <h1 className="text-2xl font-bold mb-4">Emission Scope Puzzle</h1>
+      <p className="text-gray-600 mb-6">Trascina ogni attività nel corretto ambito di emissione (Scope 1, 2 o 3).</p>
+
+      <div className="flex flex-wrap justify-center gap-6 mb-6">
+        {items.map((item) => (
+          <div
+            key={item.id}
+            draggable={!answers[item.id]}
+            onDragStart={(e) => e.dataTransfer.setData("itemId", item.id)}
+            className={`p-3 w-64 text-center rounded-xl shadow-md cursor-move border ${
+              answers[item.id]
+                ? answers[item.id].correct
+                  ? "bg-green-200 border-green-400 text-green-900"
+                  : "bg-red-200 border-red-400 text-red-900"
+                : "bg-white hover:bg-blue-50 border-gray-300"
+            }`}
+          >
+            {item.text}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-8">
+        {scopes.map((scope) => (
+          <div
+            key={scope.id}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => handleDrop(scope.id, e.dataTransfer.getData("itemId"))}
+            className="w-72 min-h-[200px] bg-white rounded-2xl shadow-lg p-4 border-2 border-dashed border-gray-400 hover:border-green-500 transition-all"
+          >
+            <h2 className="text-lg font-bold text-center mb-2">{scope.title}</h2>
+            <p className="text-sm text-gray-600 mb-3 text-center">{scope.description}</p>
+            <ul className="space-y-1">
+              {Object.entries(answers)
+                .filter(([_, val]) => val.scopeId === scope.id)
+                .map(([itemId, val]) => (
+                  <li
+                    key={itemId}
+                    className={`p-2 rounded-md text-sm ${
+                      val.correct ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {items.find((i) => i.id === itemId)?.text}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 p-4 bg-white rounded-xl shadow-md text-center">
+        <h2 className="font-bold text-lg">Punteggio: {score}</h2>
+        {Object.keys(answers).length === items.length && (
+          <p className="mt-2 font-semibold text-gray-700">
+            Hai completato il puzzle! {score >= 50 ? "Ottimo lavoro!" : "Prova a migliorare il tuo punteggio!"}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
