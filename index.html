@@ -201,9 +201,9 @@
         const answers = {};
 
         const scopes = [
-            { id: 1, title: '📍 Scope 1', desc: 'Emissioni dirette: attività controllate dall\'azienda' },
-            { id: 2, title: '⚡ Scope 2', desc: 'Emissioni indirette da energia acquistata' },
-            { id: 3, title: '🔗 Scope 3', desc: 'Emissioni lungo la catena del valore' }
+            { id: 1, title: 'Scope 1', desc: 'Emissioni dirette: attività controllate dall\'azienda' },
+            { id: 2, title: 'Scope 2', desc: 'Emissioni indirette da energia acquistata' },
+            { id: 3, title: 'Scope 3', desc: 'Emissioni lungo la catena del valore' }
         ];
 
         function render() {
@@ -293,7 +293,7 @@
                     let message = '';
                     
                     if (correctCount === items.length) {
-                        message = '🎉 Perfetto! Hai classificato correttamente tutte le emissioni!';
+                        message = '🏆 Perfetto! Hai classificato correttamente tutte le emissioni!';
                     } else if (correctCount >= items.length / 2) {
                         message = `👍 Buon lavoro! Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
                     } else {
