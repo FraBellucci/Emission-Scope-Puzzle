@@ -160,6 +160,65 @@
             font-size: 0.95em;
             color: #78350f;
         }
+        .game-over-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+}
+
+.game-over-panel.show {
+    display: block;
+}
+
+.game-over-panel h2 {
+    color: #065f46;
+    margin-bottom: 15px;
+}
+
+.game-over-panel p {
+    color: #475569;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #10b981;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #059669;
+}
+
+.btn-secondary {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4b5563;
+}
 
         @media (max-width: 768px) {
             .item {
@@ -186,6 +245,14 @@
         <div id="scopes" class="scopes"></div>
         <div class="score">🎯 Punteggio: <span id="score-value">0</span></div>
     </div>
+    <div id="gameOverPanel" class="game-over-panel">
+    <h2 id="gameOverTitle">🏆 Gioco completato!</h2>
+    <p id="gameOverMessage"></p>
+    <div class="button-container">
+        <button class="btn btn-primary" onclick="resetGame()">🔄 Rigioca</button>
+        <button class="btn btn-secondary" onclick="window.close()">✓ Torna al corso</button>
+    </div>
+</div>
 
     <script>
         const items = [
@@ -274,7 +341,7 @@
 
             document.getElementById('score-value').textContent = score;
         }
-
+       
         function handleDrop(scopeId, itemId) {
             if (answers[itemId]) return;
             
@@ -300,10 +367,18 @@
                         message = `💪 Puoi fare meglio! Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
                     }
                     
-                    alert(message + `\n\nPunteggio finale: ${score}`);
+                    document.getElementById('gameOverTitle').textContent = title;
+        document.getElementById('gameOverMessage').textContent = message + ` Punteggio finale: ${score}`;
+        document.getElementById('gameOverPanel').classList.add('show');
                 }, 500);
             }
         }
+        function resetGame() {
+    score = 0;
+    Object.keys(answers).forEach(key => delete answers[key]);
+    document.getElementById('gameOverPanel').classList.remove('show');
+    render();
+}
 
         // Inizializza il gioco
         render();
