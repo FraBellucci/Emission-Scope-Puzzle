@@ -272,13 +272,24 @@
             { id: 2, title: 'Scope 2', desc: 'Emissioni indirette da energia acquistata' },
             { id: 3, title: 'Scope 3', desc: 'Emissioni lungo la catena del valore' }
         ];
+        function shuffle(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
 
         function render() {
-            const itemsContainer = document.getElementById('items');
-            itemsContainer.innerHTML = '';
-            
-            items.forEach(item => {
-                const div = document.createElement('div');
+    const itemsContainer = document.getElementById('items');
+    itemsContainer.innerHTML = '';
+    
+    // Mescola le carte solo se il gioco è appena iniziato
+    const itemsToRender = Object.keys(answers).length === 0 ? shuffle(items) : items;
+    
+    itemsToRender.forEach(item => {
+        const div = document.createElement('div');
                 div.textContent = item.text;
                 div.className = `item ${answers[item.id] ? (answers[item.id].correct ? 'correct' : 'wrong') : ''}`;
                 div.draggable = !answers[item.id];
