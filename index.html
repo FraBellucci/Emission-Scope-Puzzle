@@ -272,6 +272,7 @@
             { id: 2, title: 'Scope 2', desc: 'Emissioni indirette da energia acquistata' },
             { id: 3, title: 'Scope 3', desc: 'Emissioni lungo la catena del valore' }
         ];
+        
         function shuffle(array) {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -281,14 +282,12 @@
     return shuffled;
 }
 
-        function render() {
+function render() {
     const itemsContainer = document.getElementById('items');
     itemsContainer.innerHTML = '';
     
-    // Mescola le carte solo se il gioco è appena iniziato
-    const itemsToRender = Object.keys(answers).length === 0 ? shuffle(items) : items;
-    
-    itemsToRender.forEach(item => {
+      
+    shuffledItems.forEach(item => {
         const div = document.createElement('div');
                 div.textContent = item.text;
                 div.className = `item ${answers[item.id] ? (answers[item.id].correct ? 'correct' : 'wrong') : ''}`;
@@ -385,9 +384,9 @@
         document.getElementById('gameOverTitle').textContent = title;
         document.getElementById('gameOverMessage').textContent = message + ` Punteggio finale: ${score}`;
         document.getElementById('gameOverPanel').classList.add('show');
-    }, 500);
-}
+            }, 500);
         }
+    }
         function resetGame() {
     score = 0;
     Object.keys(answers).forEach(key => delete answers[key]);
@@ -396,6 +395,7 @@
 }
 
         // Inizializza il gioco
+        shuffledItems = shuffle(items); 
         render();
     </script>
 </body>
