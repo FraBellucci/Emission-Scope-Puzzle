@@ -354,24 +354,28 @@
             render();
 
             // Controlla se il gioco è finito
-            if (Object.keys(answers).length === items.length) {
-                setTimeout(() => {
-                    const correctCount = Object.values(answers).filter(a => a.correct).length;
-                    let message = '';
-                    
-                    if (correctCount === items.length) {
-                        message = '🏆 Perfetto! Hai classificato correttamente tutte le emissioni!';
-                    } else if (correctCount >= items.length / 2) {
-                        message = `👍 Buon lavoro! Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
-                    } else {
-                        message = `💪 Puoi fare meglio! Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
-                    }
-                    
-                    document.getElementById('gameOverTitle').textContent = title;
+           if (Object.keys(answers).length === items.length) {
+    setTimeout(() => {
+        const correctCount = Object.values(answers).filter(a => a.correct).length;
+        let title = '';  // AGGIUNGI QUESTA RIGA
+        let message = '';
+        
+        if (correctCount === items.length) {
+            title = '🏆 Perfetto!';  // AGGIUNGI QUESTA RIGA
+            message = 'Hai classificato correttamente tutte le emissioni!';
+        } else if (correctCount >= items.length / 2) {
+            title = '👍 Buon lavoro!';  // AGGIUNGI QUESTA RIGA
+            message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
+        } else {
+            title = '💪 Puoi fare meglio!';  // AGGIUNGI QUESTA RIGA
+            message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
+        }
+        
+        document.getElementById('gameOverTitle').textContent = title;
         document.getElementById('gameOverMessage').textContent = message + ` Punteggio finale: ${score}`;
         document.getElementById('gameOverPanel').classList.add('show');
-                }, 500);
-            }
+    }, 500);
+}
         }
         function resetGame() {
     score = 0;
