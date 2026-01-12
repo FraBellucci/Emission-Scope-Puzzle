@@ -48,14 +48,22 @@
             padding: 12px;
             width: 240px;
             border-radius: 10px;
-            cursor: move;
+            cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         .item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .item.selected {
+            background: #dbeafe !important;
+            border-color: #3b82f6 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
         }
 
         .item.correct {
@@ -70,6 +78,16 @@
             border-color: #ef4444;
             color: #991b1b;
             cursor: default;
+        }
+
+        /* Indicatore visivo per touch device */
+        .item:not(.correct):not(.wrong)::after {
+            content: "👆";
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 0.8em;
+            opacity: 0.6;
         }
 
         .scopes {
@@ -138,6 +156,32 @@
             border: 1px solid #ef4444;
         }
 
+        .assign-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin: 10px 0;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 250px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .assign-btn:hover {
+            background: linear-gradient(45deg, #059669, #047857);
+            transform: translateY(-1px);
+        }
+
+        .assign-btn:active {
+            transform: translateY(0);
+        }
+
         .score {
             margin-top: 30px;
             font-weight: bold;
@@ -160,84 +204,125 @@
             font-size: 0.95em;
             color: #78350f;
         }
+
         .game-over-panel {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    margin: 30px auto;
-    max-width: 500px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: none;
-}
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
 
-.game-over-panel.show {
-    display: block;
-}
+        .game-over-panel.show {
+            display: block;
+        }
 
-.game-over-panel h2 {
-    color: #065f46;
-    margin-bottom: 15px;
-}
+        .game-over-panel h2 {
+            color: #065f46;
+            margin-bottom: 15px;
+        }
 
-.game-over-panel p {
-    color: #475569;
-    margin-bottom: 20px;
-    font-size: 1.1em;
-}
+        .game-over-panel p {
+            color: #475569;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
 
-.button-container {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 20px;
-}
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-.btn {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s;
-}
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
 
-.btn-primary {
-    background: #10b981;
-    color: white;
-}
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
 
-.btn-primary:hover {
-    background: #059669;
-}
+        .btn-primary:hover {
+            background: #059669;
+        }
 
-.btn-secondary {
-    background: #6b7280;
-    color: white;
-}
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
 
-.btn-secondary:hover {
-    background: #4b5563;
-}
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .touch-instructions {
+            background: #e0f2fe;
+            border: 2px solid #0891b2;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 700px;
+            font-size: 0.95em;
+            color: #164e63;
+            display: none;
+        }
+
+        .touch-instructions.show {
+            display: block;
+        }
 
         @media (max-width: 768px) {
             .item {
                 width: 200px;
+                padding: 16px;
+                font-size: 0.95em;
+                min-height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
             }
+            
             .scope {
                 width: 100%;
                 max-width: 350px;
+                padding: 20px;
+                min-height: 180px;
+            }
+
+            .instructions {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <h1>🌍 Emission Scope Puzzle</h1>
-    <p class="intro">Trascina ogni attività nel corretto ambito di emissione (Scope 1, 2 o 3)</p>
+    <p class="intro">Classifica ogni attività nel corretto ambito di emissione (Scope 1, 2 o 3)</p>
     
     <div class="instructions">
-        💡 <strong>Come giocare:</strong> Trascina le carte delle attività nelle caselle degli Scope corretti. 
+        💡 <strong>Come giocare:</strong> <span id="instructions-text">Trascina le carte delle attività nelle caselle degli Scope corretti.</span>
         Ogni risposta corretta vale +10 punti, ogni errore -5 punti!
+    </div>
+
+    <div class="touch-instructions" id="touchInstructions">
+        📱 <strong>Su tablet/cellulare:</strong> Tocca una carta per selezionarla (diventerà blu), poi tocca il pulsante "📍 Assegna" nello Scope desiderato.
     </div>
 
     <div id="game">
@@ -245,14 +330,15 @@
         <div id="scopes" class="scopes"></div>
         <div class="score">🎯 Punteggio: <span id="score-value">0</span></div>
     </div>
+    
     <div id="gameOverPanel" class="game-over-panel">
-    <h2 id="gameOverTitle">🏆 Gioco completato!</h2>
-    <p id="gameOverMessage"></p>
-    <div class="button-container">
-        <button class="btn btn-primary" onclick="resetGame()">🔄 Rigioca</button>
-        <button class="btn btn-secondary" onclick="window.close()">✓ Torna al corso</button>
+        <h2 id="gameOverTitle">🏆 Gioco completato!</h2>
+        <p id="gameOverMessage"></p>
+        <div class="button-container">
+            <button class="btn btn-primary" onclick="resetGame()">🔄 Rigioca</button>
+            <button class="btn btn-secondary" onclick="window.close()">✓ Torna al corso</button>
+        </div>
     </div>
-</div>
 
     <script>
         const items = [
@@ -266,6 +352,9 @@
 
         let score = 0;
         const answers = {};
+        let selectedItem = null;
+        let isTouchDevice = 'ontouchstart' in window;
+        let shuffledItems = [];
 
         const scopes = [
             { id: 1, title: 'Scope 1', desc: 'Emissioni dirette: attività controllate dall\'azienda' },
@@ -274,34 +363,45 @@
         ];
         
         function shuffle(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
 
-function render() {
-    const itemsContainer = document.getElementById('items');
-    itemsContainer.innerHTML = '';
-    
-      
-    shuffledItems.forEach(item => {
-        const div = document.createElement('div');
+        function render() {
+            const itemsContainer = document.getElementById('items');
+            itemsContainer.innerHTML = '';
+            
+            shuffledItems.forEach(item => {
+                const div = document.createElement('div');
                 div.textContent = item.text;
                 div.className = `item ${answers[item.id] ? (answers[item.id].correct ? 'correct' : 'wrong') : ''}`;
-                div.draggable = !answers[item.id];
+                div.draggable = !answers[item.id] && !isTouchDevice;
                 div.dataset.itemId = item.id;
                 
-                div.addEventListener('dragstart', e => {
-                    e.dataTransfer.setData('itemId', item.id);
-                    e.target.style.opacity = '0.5';
-                });
-                
-                div.addEventListener('dragend', e => {
-                    e.target.style.opacity = '1';
-                });
+                // Solo se l'item non è stato ancora posizionato
+                if (!answers[item.id]) {
+                    if (isTouchDevice) {
+                        // TOUCH: Sistema di selezione per tablet
+                        div.addEventListener('click', handleItemClick);
+                        if (selectedItem === item.id) {
+                            div.classList.add('selected');
+                        }
+                    } else {
+                        // DESKTOP: Mantieni drag & drop
+                        div.addEventListener('dragstart', e => {
+                            e.dataTransfer.setData('itemId', item.id);
+                            e.target.style.opacity = '0.5';
+                        });
+                        
+                        div.addEventListener('dragend', e => {
+                            e.target.style.opacity = '1';
+                        });
+                    }
+                }
                 
                 itemsContainer.appendChild(div);
             });
@@ -313,27 +413,41 @@ function render() {
                 const box = document.createElement('div');
                 box.className = 'scope';
                 box.dataset.scopeId = scope.id;
+                
+                // Aggiungi pulsante per tablet se c'è un item selezionato
+                let buttonHTML = '';
+                if (isTouchDevice && selectedItem) {
+                    const itemText = items.find(i => i.id === selectedItem)?.text;
+                    buttonHTML = `<button class="assign-btn" onclick="handleAssign(${scope.id})">
+                        📍 Assegna: "${itemText.substring(0, 25)}${itemText.length > 25 ? '...' : ''}"
+                    </button>`;
+                }
+                
                 box.innerHTML = `
                     <h2>${scope.title}</h2>
                     <p>${scope.desc}</p>
+                    ${buttonHTML}
                     <ul id="scope-${scope.id}"></ul>
                 `;
                 
-                box.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    box.classList.add('drag-over');
-                });
-                
-                box.addEventListener('dragleave', e => {
-                    box.classList.remove('drag-over');
-                });
-                
-                box.addEventListener('drop', e => {
-                    e.preventDefault();
-                    box.classList.remove('drag-over');
-                    const itemId = e.dataTransfer.getData('itemId');
-                    handleDrop(scope.id, itemId);
-                });
+                if (!isTouchDevice) {
+                    // DESKTOP: Mantieni drag & drop
+                    box.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        box.classList.add('drag-over');
+                    });
+                    
+                    box.addEventListener('dragleave', e => {
+                        box.classList.remove('drag-over');
+                    });
+                    
+                    box.addEventListener('drop', e => {
+                        e.preventDefault();
+                        box.classList.remove('drag-over');
+                        const itemId = e.dataTransfer.getData('itemId');
+                        handleDrop(scope.id, itemId);
+                    });
+                }
                 
                 scopesContainer.appendChild(box);
             });
@@ -351,6 +465,26 @@ function render() {
 
             document.getElementById('score-value').textContent = score;
         }
+
+        function handleItemClick(event) {
+            const itemId = event.target.dataset.itemId;
+            
+            // Se clicca sullo stesso item, lo deseleziona
+            if (selectedItem === itemId) {
+                selectedItem = null;
+            } else {
+                selectedItem = itemId;
+            }
+            
+            render(); // Ri-renderizza per mostrare la selezione
+        }
+
+        function handleAssign(scopeId) {
+            if (selectedItem) {
+                handleDrop(scopeId, selectedItem);
+                selectedItem = null; // Deseleziona dopo l'assegnazione
+            }
+        }
        
         function handleDrop(scopeId, itemId) {
             if (answers[itemId]) return;
@@ -364,39 +498,53 @@ function render() {
             render();
 
             // Controlla se il gioco è finito
-           if (Object.keys(answers).length === items.length) {
-    setTimeout(() => {
-        const correctCount = Object.values(answers).filter(a => a.correct).length;
-        let title = '';  // AGGIUNGI QUESTA RIGA
-        let message = '';
-        
-        if (correctCount === items.length) {
-            title = '🏆 Perfetto!';  // AGGIUNGI QUESTA RIGA
-            message = 'Hai classificato correttamente tutte le emissioni!';
-        } else if (correctCount >= items.length / 2) {
-            title = '👍 Buon lavoro!';  // AGGIUNGI QUESTA RIGA
-            message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
-        } else {
-            title = '💪 Puoi fare meglio!';  // AGGIUNGI QUESTA RIGA
-            message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
+            if (Object.keys(answers).length === items.length) {
+                setTimeout(() => {
+                    const correctCount = Object.values(answers).filter(a => a.correct).length;
+                    let title = '';
+                    let message = '';
+                    
+                    if (correctCount === items.length) {
+                        title = '🏆 Perfetto!';
+                        message = 'Hai classificato correttamente tutte le emissioni!';
+                    } else if (correctCount >= items.length / 2) {
+                        title = '👍 Buon lavoro!';
+                        message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
+                    } else {
+                        title = '💪 Puoi fare meglio!';
+                        message = `Hai classificato correttamente ${correctCount} su ${items.length} attività.`;
+                    }
+                    
+                    document.getElementById('gameOverTitle').textContent = title;
+                    document.getElementById('gameOverMessage').textContent = message + ` Punteggio finale: ${score}`;
+                    document.getElementById('gameOverPanel').classList.add('show');
+                }, 500);
+            }
         }
         
-        document.getElementById('gameOverTitle').textContent = title;
-        document.getElementById('gameOverMessage').textContent = message + ` Punteggio finale: ${score}`;
-        document.getElementById('gameOverPanel').classList.add('show');
-            }, 500);
-        }
-    }
         function resetGame() {
-    score = 0;
-    Object.keys(answers).forEach(key => delete answers[key]);
-    document.getElementById('gameOverPanel').classList.remove('show');
-    render();
-}
+            score = 0;
+            selectedItem = null;
+            Object.keys(answers).forEach(key => delete answers[key]);
+            document.getElementById('gameOverPanel').classList.remove('show');
+            shuffledItems = shuffle(items);
+            render();
+        }
 
         // Inizializza il gioco
-        shuffledItems = shuffle(items); 
-        render();
+        function initGame() {
+            // Rileva se è touch e aggiorna le istruzioni
+            if (isTouchDevice) {
+                document.getElementById('instructions-text').textContent = 'Su desktop trascina le carte, su touch tocca per selezionare.';
+                document.getElementById('touchInstructions').classList.add('show');
+            }
+            
+            shuffledItems = shuffle(items);
+            render();
+        }
+
+        // Avvia il gioco quando la pagina è caricata
+        initGame();
     </script>
 </body>
 </html>
